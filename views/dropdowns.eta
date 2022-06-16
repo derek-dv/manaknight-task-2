@@ -1,0 +1,22 @@
+
+<div class="d-flex justify-content-between"> 
+  <div class="mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1">Airport 1</span>
+    </div>
+    <input type="text" id="airport1" placeholder="Country" aria-label="Country" aria-describedby="basic-addon1">
+     <div id="dropdown1">
+
+    </div>
+  </div>
+  <div class="mb-3 ml-4">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1">Airport 2</span>
+    </div>
+    <input type="text" id="airport2" placeholder="Country" aria-label="Country" aria-describedby="basic-addon1">
+    <div id="dropdown2">
+
+    </div>
+  </div>
+  
+</div>

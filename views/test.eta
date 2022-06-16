@@ -5,4 +5,110 @@
   <h2><%= it.condition %></h2>
   <p>Temperature: <%= it.temperature %> C</p>
   <p>Humidity: <%= it.humidity %>%</p>
+  <hr/>
+  <%~ includeFile('./dropdowns') %>
+  <button onclick="distance(this)" class="btn btn-primary">Get distance</button>
 </div>
+
+<script>
+  var airport1 = document.getElementById('airport1') 
+  var airport2 = document.getElementById('airport2') 
+  var airport1Pos = {}
+  var airport2Pos = {}
+  var airports
+  var d1 = document.getElementById('dropdown1') 
+  var d2 = document.getElementById('dropdown2') 
+
+  function toRad(Value) 
+    {
+        return Value * Math.PI / 180;
+    }
+
+  function calcCrow(lat1, lon1, lat2, lon2) 
+    {
+      var R = 6371; // km
+      var dLat = toRad(lat2-lat1);
+      var dLon = toRad(lon2-lon1);
+      var lat1 = toRad(lat1);
+      var lat2 = toRad(lat2);
+
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      var d = R * c;
+      return d;
+    }
+
+  function distance(){
+    var dist = calcCrow(airport1Pos.lat, airport1Pos.lon, airport2Pos.lat, airport2Pos.lon)
+    console.log(dist)
+  }
+
+  function handleClick1(event){
+    alert('rr')
+    airport1.value = airports[event.dataset.id].name
+    airport1Pos['lat'] = Number(airports[event.dataset.id].latitude)
+    airport1Pos['lon'] = Number(airports[event.dataset.id].longitude)
+    console.log(airport1Pos)
+    d1.style.display = 'none'
+  }
+
+  function handleClick2(event){
+    alert('rr')
+    airport2.value = airports[event.dataset.id].name
+    airport2Pos['lat'] = Number(airports[event.dataset.id].latitude)
+    airport2Pos['lon'] = Number(airports[event.dataset.id].longitude)
+    console.log(airport1Pos)
+    d2.style.display = 'none'
+  }
+
+  airport1.addEventListener('input', function(){
+    if(this.value.length > 3){
+      axios.get(`/api/airport/search?obj=${this.value}`)
+        .then((res)=>{
+          airports = res.data.airports
+          for(var i=0; i<=airports.length-1; i++){
+            d1.style.display = 'block'
+            airport = airports[i]
+            console.log(airport)
+            const newA = document.createElement("a");
+            newA.setAttribute("class", "dropdown-item");
+            newA.setAttribute("data-id", i);
+            newA.setAttribute("onclick", 'handleClick1(this)');
+            const newContent = document.createTextNode(airport.name);
+            newA.setAttribute("href", "#");
+            newA.appendChild(newContent)
+            document.getElementById('dropdown1').appendChild(newA)
+          }
+        })
+    }
+    else {
+      d1.style.display = 'none'
+    }
+  })
+
+  airport2.addEventListener('input', function(){
+    if(this.value.length > 3){
+      axios.get(`/api/airport/search?obj=${this.value}`)
+        .then((res)=>{
+          airports = res.data.airports
+          for(var i=0; i<=airports.length-1; i++){
+            d2.style.display = 'block'
+            airport = airports[i]
+            console.log(airport)
+            const newA = document.createElement("a");
+            newA.setAttribute("class", "dropdown-item");
+            newA.setAttribute("data-id", i);
+            newA.setAttribute("onclick", 'handleClick2(this)');
+            const newContent = document.createTextNode(airport.name);
+            newA.setAttribute("href", "#");
+            newA.appendChild(newContent)
+            document.getElementById('dropdown2').appendChild(newA)
+          }
+        })
+    }
+    else {
+      d2.style.display = 'none'
+    }
+  })
+</script>
