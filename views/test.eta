@@ -1,0 +1,8 @@
+<%~ includeFile('./bootstrap') %>
+<title>Home</title>
+<div class="h-100 d-flex flex-column align-items-center justify-content-center">
+  <h1><%= it.place %></h1>
+  <h2><%= it.condition %></h2>
+  <p>Temperature: <%= it.temperature %> C</p>
+  <p>Humidity: <%= it.humidity %>%</p>
+</div>
