@@ -7,12 +7,14 @@
   "author": "Derek David <derekmiracledavid@hotmail.com>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "csv-parse": "^5.2.0",
     "eta": "^1.12.3",
     "express": "^4.18.1",
     "mysql2": "^2.3.3",
     "node-fetch": "^3.2.6",
-    "sequelize": "^6.20.1"
+    "sequelize": "^6.20.1",
+    "stripe": "^9.8.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.4.1"

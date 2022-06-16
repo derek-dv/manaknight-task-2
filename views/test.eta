@@ -3,14 +3,29 @@
 <div class="h-100 d-flex flex-column align-items-center justify-content-center">
   <h1><%= it.place %></h1>
   <h2><%= it.condition %></h2>
-  <p>Temperature: <%= it.temperature %> C</p>
+  <p>Temperature: <%= it.temperature %>&#8451;</p>
   <p>Humidity: <%= it.humidity %>%</p>
   <hr/>
   <%~ includeFile('./dropdowns') %>
+  <h1 id="price"></h1>
+  <form id="pay" action="payment" method="POST">
+    <script
+        id="stripe"
+        src="//checkout.stripe.com/v3/checkout.js"
+        class="stripe-button"
+        data-key="<%= it.secret %>"
+        data-currency="usd"
+        data-name="Test task 2"
+        data-description="Buy airports"
+        data-locale="auto" >
+        </script>
+    </form>
   <button onclick="distance(this)" class="btn btn-primary">Get distance</button>
 </div>
 
 <script>
+  var pay = document.getElementById('pay')
+  pay.style.display = 'none'
   var airport1 = document.getElementById('airport1') 
   var airport2 = document.getElementById('airport2') 
   var airport1Pos = {}
@@ -41,20 +56,25 @@
 
   function distance(){
     var dist = calcCrow(airport1Pos.lat, airport1Pos.lon, airport2Pos.lat, airport2Pos.lon)
+    var price = `${(dist * 10).toFixed(2)}`
+    document.getElementById('price').innerHTML = `$${price}`
+    pay.style.display = 'block'
+    document.getElementById('stripe').setAttribute('data-amount', price)
+    console.log(document.getElementById('stripe').dataset.amount)
     console.log(dist)
   }
 
   function handleClick1(event){
-    alert('rr')
+    pay.style.display = 'none'
     airport1.value = airports[event.dataset.id].name
     airport1Pos['lat'] = Number(airports[event.dataset.id].latitude)
     airport1Pos['lon'] = Number(airports[event.dataset.id].longitude)
+    airport1Pos['iso'] = airports[event.dataset.id].iso
     console.log(airport1Pos)
     d1.style.display = 'none'
   }
 
   function handleClick2(event){
-    alert('rr')
     airport2.value = airports[event.dataset.id].name
     airport2Pos['lat'] = Number(airports[event.dataset.id].latitude)
     airport2Pos['lon'] = Number(airports[event.dataset.id].longitude)
@@ -63,6 +83,7 @@
   }
 
   airport1.addEventListener('input', function(){
+  pay.style.display = 'none'
     if(this.value.length > 3){
       axios.get(`/api/airport/search?obj=${this.value}`)
         .then((res)=>{
@@ -88,6 +109,7 @@
   })
 
   airport2.addEventListener('input', function(){
+    pay.style.display = 'none'
     if(this.value.length > 3){
       axios.get(`/api/airport/search?obj=${this.value}`)
         .then((res)=>{

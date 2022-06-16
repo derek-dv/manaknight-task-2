@@ -22,4 +22,14 @@ export const Airport = sequelize.define("Airport", {
   country: DataTypes.STRING,
 });
 
+
+export const Order = sequelize.define('Order', {
+  from_airport: DataTypes.STRING,
+  to_airport: DataTypes.STRING,
+  from_country: DataTypes.STRING,
+  to_country: DataTypes.STRING,
+  total: DataTypes.STRING,
+  stripe_id: DataTypes.STRING,
+  status: DataTypes.STRING
+})
 export default sequelize;
